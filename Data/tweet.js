@@ -1,61 +1,68 @@
-let tweets = [
-    {
-        id: '1',
-        text: '안녕하세요!',
-        createdAt: Date.now().toString(),
-        name: '김사과',
-        username: 'apple',
-        url: 'https://www.logoyogo.com/web/wp-content/uploads/edd/2021/02/logoyogo-1-45.jpg'
-    },
-    {
-        id: '2',
-        text: '반갑습니다!',
-        createdAt: Date.now().toString(),
-        name: '반하나',
-        username: 'banana',
-        url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJSRyel4MCk8BAbI6gT_j4DBTEIcY0WW4WWfoklymsWA&s'
-    }
-];
+
+import { useVirtualId } from './db/database.js';
+import * as AuthRepository from './auth.js'
+
+
+import Mongoose from 'mongoose';
+
+
+const tweetSchema = new Mongoose.Schema({
+    text: { type: String, required: true },
+    userId: { type: String, require:true},
+    name: {type: String, require:true},
+    username: { type: String, required: true },
+    url: String,},
+    {timestamps: true}
+);
+
+useVirtualId(tweetSchema);
+const Tweet = Mongoose.model('Tweet', tweetSchema);
+
+
+
 
 // 모든 트윗을 리턴
 export async function getAll() {
-    return tweets;
-
+    return Tweet.find().sort({ createdAt: -1});
 }
+
 
 // 해당 아이디에 대한 트윗을 리턴
 export async function getAllByUsername(username){
-    return tweets.filter((tweet) => tweet.username === username)
+    return Tweet.find({ username }).sort({ createdAt: -1 });
 }
+
 
 // 글번호에 대한 트윗을 리턴
 export async function getById(id){
-    return tweets.find((tweet) => tweet.id === id);
+    return Tweet.findById(id);
 }
 
-// 트윗을 작성
-export async function create(text, name, username){
-    const tweet = {
-        id: '10',
+
+
+
+// 트윗 생성
+export async function create(text, userId) {
+    return AuthRepository.findById(userId).then((user) =>new Tweet({
         text,
-        createdAt: Date.now().toString(),
-        name,
-        username    // 키 값과 변수 값이 같으면 한번만 적어도 가능
-    };
-    tweets = [tweet, ...tweets];
-    return tweets;
+        userId: user._id,
+        username: user.username,
+        url: user.url
+    }).save())
 }
 
+
+    
 // 트윗을 변경
 export async function update(id, text){
-    const tweet = tweets.find((tweet) => tweet.id === id);
-    if(tweet){
-        tweet.text = text;
-    }
-    return tweet;
+    return Tweet.findByIdAndUpdate(id, { text }, { returnDocument: "after" });
 }
 
-// 트윗을 삭제
+
+
 export async function remove(id){
-    tweets = tweets.filter((tweet) => tweet.id !== id);
+    return Tweet.findByIdAndDelete(id);
 }
+
+
+

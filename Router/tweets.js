@@ -2,7 +2,7 @@ import express from "express";
 import * as tweetController from '../controller/tweet.js'
 import {body} from 'express-validator'
 import { validate } from "../middleware/validator.js"
-import { isAuth } from "../middleware/auth.js";
+import { isAuth } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -69,7 +69,7 @@ router.get('/:id', isAuth,tweetController.getTweet);
 //     res.status(201).json(tweets);
 // });
 
-router.post('/', validateTweet, isAuth,tweetController.createTweet);
+router.post('/',isAuth, validateTweet, tweetController.createTweet);
 
 
 
@@ -91,7 +91,7 @@ router.post('/', validateTweet, isAuth,tweetController.createTweet);
 // });
 
 
-router.put('/:id', validateTweet, isAuth,tweetController.updateTweet);
+router.put('/:id', validateTweet,isAuth, tweetController.updateTweet);
 
 
 

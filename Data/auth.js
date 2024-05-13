@@ -1,35 +1,35 @@
-let users = [
-    {
-        id: '1',
-        username: 'apple',
-        password: '$2b$10$ERrMBARDprS1Ajt9snjS2uXaCuYv/enG3nWFldAQWsnUQ2G.XwKvu',
-        name: '김사과',
-        email: 'apple@apple.com',
-        url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJSRyel4MCk8BAbI6gT_j4DBTEIcY0WW4WWfoklymsWA&s'
-    },
-    {
-        id: '2',
-        username: 'banana',
-        password: '$2b$10$ERrMBARDprS1Ajt9snjS2uXaCuYv/enG3nWFldAQWsnUQ2G.XwKvu',
-        name: '반하나',
-        email: 'banana@banana.com',
-        url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJSRyel4MCk8BAbI6gT_j4DBTEIcY0WW4WWfoklymsWA&s'
-    }
-];
+import Mongoose from 'mongoose';
+import {useVirtualId} from './db/database.js';
+
+
+const userSchema = new Mongoose.Schema({
+    username: {type: String, require: true},
+    name: {type:String, require: true},
+    email: {type:String, require: true},
+    password: {type:String, require: true},
+    url : String 
+});
+ 
+
+
+useVirtualId(userSchema);
+
+const User = Mongoose.model('User', userSchema);
+
 // 아이디(username) 중복검사
 export async function findByUsername(username){
-    return users.find((user) => user.username === username);
+    return User.findOne({username});
 }
-// id 중복검사
+
+// // id 중복검사
 export async function findById(id){
-    return users.find((user) => user.id === id);
+    return User.findById(id);
 }
+
+
+// // id 생성
 export async function createUser(user){
-    const created = {id:'10', ...user }
-    users.push(created);
-    return created.username;
+    return new User(user).save().then((data)=> data.id);
 }
-export async function login(username){
-    const user = users.find((user) => user.username === username)
-    return user;
-}
+
+
