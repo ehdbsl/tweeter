@@ -23,6 +23,7 @@ const Tweet = Mongoose.model('Tweet', tweetSchema);
 
 // 모든 트윗을 리턴
 export async function getAll() {
+    // { createdAt: -1} : 내림차순으로 정렬
     return Tweet.find().sort({ createdAt: -1});
 }
 

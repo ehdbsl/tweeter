@@ -4,7 +4,7 @@ import tweetsRouter from "./router/tweets.js";
 import authRouter from "./router/auth.js";
 import { config } from "./config.js";
 import { connectDB } from "../db/database.js";
-
+import { initSocket} from "./connection/socket.js";
 
 const app = express();
 
@@ -17,6 +17,9 @@ app.use('/auth', authRouter);
 app.use((req, res, next) => {
     res.sendStatus(404);
 });
+
+// const server = app.listen(config.host.port);
+// initSocket(server);
 
 // DB 연결 테스트
 

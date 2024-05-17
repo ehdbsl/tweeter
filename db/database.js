@@ -4,7 +4,7 @@ import Mongoose from 'mongoose';
 
 
 export async function connectDB(){
-    return Mongoose.connect(config.db.host);''
+    return Mongoose.connect(config.db.host);
 }
 
 export function useVirtualId(schema){

@@ -7,6 +7,7 @@ import { isAuth } from '../middleware/auth.js';
 const router = express.Router();
 
 const validateLogin = [
+    // withMessage: 유효성 검사 중에 발생한 오류에 대한 사용자 정의 메시지를 추가할 때 사용
     body('username').trim().notEmpty().withMessage('username을 입력해주세요'),
     body('password').trim().isLength({min:4}).withMessage('password는 최소 4자 이상 입력해주세요'),
     validate
